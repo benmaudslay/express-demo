@@ -1,24 +1,30 @@
 const express = require("express");
+const path = require("path");
+const { saveTask } = require("../utils/notes");
+
+// Init the instance of express
 const app = express();
 
+// Middleware
 app.use(express.json());
 
+const public_directory = path.join(__dirname, "../public/");
+app.use(express.static(public_directory));
+// app.use(express.static(path.join(__dirname, "../public/")))
+
+// Routes
 app.get("/", (req, res) => {
-  // any code is valid here
-  console.log(req.query);
-
-  res.send({ message: `Hello your name is ${req.query.name}` });
+  res.send("message");
 });
 
-app.post("/", (req, res) => {
+app.get("/contact", (req, res) => {
+  res.send("Hi there");
+});
+
+app.post("/tasks", (req, res) => {
   console.log(req.body);
-  res.send({
-    message: `You entered your info under the name ${req.body.name}`,
-  });
-});
-
-app.get("/data", (req, res) => {
-  res.send({ message: "Hello there" });
+  saveTask(req.body.task);
+  res.send({ message: `Success` });
 });
 
 app.listen(5000, () => {
